@@ -3,8 +3,9 @@ package runscope
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 	"net/url"
+
+	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 )
 
 type Bucket struct {
@@ -102,7 +103,7 @@ func (c *BucketClient) List(ctx context.Context) ([]*Bucket, error) {
 	if err != nil {
 		return nil, err
 	}
-	buckets := make([]*Bucket, len(resp.Buckets), len(resp.Buckets))
+	buckets := make([]*Bucket, len(resp.Buckets))
 	for i, bucket := range resp.Buckets {
 		buckets[i] = BucketFromSchema(&bucket)
 	}

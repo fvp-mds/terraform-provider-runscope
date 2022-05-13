@@ -3,39 +3,21 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope"
-	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var stepSources = []string{"response_status", "response_headers", "response_json", "response_xml", "response_text", "response_time", "response_size"}
-var stepComparisons = []string{
-	"equal",
-	"empty",
-	"not_empty",
-	"not_equal",
-	"contains",
-	"does_not_contain",
-	"is_a_number",
-	"equal_number",
-	"is_less_than",
-	"is_less_than_or_equal",
-	"is_greater_than",
-	"is_greater_than_or_equal",
-	"has_key",
-	"has_value",
-	"is_null",
-}
-
-func resourceRunscopeStep() *schema.Resource {
+func resourceRunscopeStepRequest() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceStepCreate,
-		ReadContext:   resourceStepRead,
-		UpdateContext: resourceStepUpdate,
+		CreateContext: resourceStepRequestCreate,
+		ReadContext:   resourceStepRequestRead,
+		UpdateContext: resourceStepRequestUpdate,
 		DeleteContext: resourceStepDelete,
 		Importer: &schema.ResourceImporter{
 			StateContext: func(ctx context.Context, d *schema.ResourceData, meta interface{}) ([]*schema.ResourceData, error) {
@@ -78,7 +60,7 @@ func resourceRunscopeStep() *schema.Resource {
 
 				test, err := client.Test.Get(ctx, opts)
 				if err != nil {
-					return nil, fmt.Errorf("Couldn't read test: %s", err)
+					return nil, fmt.Errorf("couldn't read test: %s", err)
 				}
 
 				nSteps := len(test.Steps)
@@ -240,7 +222,7 @@ func resourceRunscopeStep() *schema.Resource {
 	}
 }
 
-func resourceStepCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceStepRequestCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*providerConfig).client
 
 	opts := &runscope.StepCreateOpts{}
@@ -254,10 +236,10 @@ func resourceStepCreate(ctx context.Context, d *schema.ResourceData, meta interf
 
 	d.SetId(step.Id)
 
-	return resourceStepRead(ctx, d, meta)
+	return resourceStepRequestRead(ctx, d, meta)
 }
 
-func resourceStepRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceStepRequestRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*providerConfig).client
 
 	opts := &runscope.StepGetOpts{}
@@ -294,7 +276,7 @@ func resourceStepRead(ctx context.Context, d *schema.ResourceData, meta interfac
 	return nil
 }
 
-func resourceStepUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
+func resourceStepRequestUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*providerConfig).client
 
 	opts := &runscope.StepUpdateOpts{}
@@ -306,25 +288,7 @@ func resourceStepUpdate(ctx context.Context, d *schema.ResourceData, meta interf
 		return diag.Errorf("Couldn't create step: %s", err)
 	}
 
-	return resourceStepRead(ctx, d, meta)
-}
-
-func resourceStepDelete(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-	client := meta.(*providerConfig).client
-
-	opts := &runscope.StepDeleteOpts{}
-	expandStepGetOpts(d, &opts.StepGetOpts)
-
-	if err := client.Step.Delete(ctx, opts); err != nil {
-		return diag.Errorf("Couldn't read step: %s", err)
-	}
-
-	return nil
-}
-
-func expandStepUriOpts(d *schema.ResourceData, opts *runscope.StepUriOpts) {
-	opts.BucketId = d.Get("bucket_id").(string)
-	opts.TestId = d.Get("test_id").(string)
+	return resourceStepRequestRead(ctx, d, meta)
 }
 
 func expandStepGetOpts(d *schema.ResourceData, opts *runscope.StepGetOpts) {

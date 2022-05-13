@@ -1,12 +1,13 @@
 package provider
 
 import (
-	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope"
 	"time"
+
+	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope"
 )
 
 func expandStringSlice(s []interface{}) []string {
-	result := make([]string, len(s), len(s))
+	result := make([]string, len(s))
 	for k, v := range s {
 		result[k] = v.(string)
 	}

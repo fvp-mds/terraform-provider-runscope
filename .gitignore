@@ -2,6 +2,7 @@ terraform.tfvars
 .idea
 *.tfstate
 *.tfstate.backup
+*.terraform.lock.hcl
 terraform-provider-runscope
 pkg
 .terraform

@@ -16,6 +16,15 @@ type StepBase struct {
 	Skipped       bool                `json:"skipped"`
 }
 
+type StepSubtest struct {
+	ID              string          `json:"id"`
+	TestUUID        string          `json:"test_uuid"`
+	EnvironmentUUID string          `json:"environment_uuid"`
+	BucketKey       string          `json:"bucket_key"`
+	Variables       []StepVariable  `json:"variables"`
+	Assertions      []StepAssertion `json:"assertions"`
+}
+
 type Step struct {
 	StepBase
 	Id string `json:"id"`
@@ -44,8 +53,17 @@ type StepGetResponse struct {
 	Step `json:"data"`
 }
 
+type StepGetSubstepResponse struct {
+	Step StepSubtest `json:"data"`
+}
+
 type StepCreateRequest struct {
 	StepBase
+}
+
+type StepCreateSubtestRequest struct {
+	StepSubtest
+	StepType string `json:"step_type"`
 }
 
 type StepCreateResponse struct {
@@ -56,6 +74,15 @@ type StepUpdateRequest struct {
 	Step
 }
 
+type StepUpdateSubtestRequest struct {
+	StepSubtest
+	StepType string `json:"step_type"`
+}
+
 type StepUpdateResponse struct {
 	Step Step `json:"data"`
+}
+
+type StepUpdateSubtestResponse struct {
+	Step StepSubtest `json:"data"`
 }

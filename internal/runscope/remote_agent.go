@@ -3,6 +3,7 @@ package runscope
 import (
 	"context"
 	"fmt"
+
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 )
 
@@ -52,7 +53,7 @@ func (c *RemoteAgentClient) List(ctx context.Context, opts *RemoteAgentListOpts)
 		return nil, err
 	}
 
-	remoteAgents := make([]*RemoteAgent, len(resp.RemoteAgents), len(resp.RemoteAgents))
+	remoteAgents := make([]*RemoteAgent, len(resp.RemoteAgents))
 	for i, remoteAgent := range resp.RemoteAgents {
 		remoteAgents[i] = RemoteAgentFromSchema(remoteAgent)
 	}

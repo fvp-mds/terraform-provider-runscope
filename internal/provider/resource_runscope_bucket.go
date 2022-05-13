@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope"
@@ -100,7 +101,7 @@ func resourceBucketImport(ctx context.Context, d *schema.ResourceData, meta inte
 	}
 
 	if d.Id() == "" {
-		return nil, fmt.Errorf("Couldn't find bucket: %s", key)
+		return nil, fmt.Errorf("couldn't find bucket: %s", key)
 	}
 
 	results := []*schema.ResourceData{d}

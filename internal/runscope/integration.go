@@ -3,6 +3,7 @@ package runscope
 import (
 	"context"
 	"fmt"
+
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 )
 
@@ -44,7 +45,7 @@ func (c *IntegrationClient) List(ctx context.Context, opts *IntegrationListOpts)
 		return nil, err
 	}
 
-	integrations := make([]*Integration, len(resp.Integrations), len(resp.Integrations))
+	integrations := make([]*Integration, len(resp.Integrations))
 	for i, integration := range resp.Integrations {
 		integrations[i] = IntegrationFromSchema(integration)
 	}

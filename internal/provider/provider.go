@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+	"errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope"
@@ -35,11 +37,12 @@ func Provider() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"runscope_bucket":      resourceRunscopeBucket(),
-			"runscope_test":        resourceRunscopeTest(),
-			"runscope_environment": resourceRunscopeEnvironment(),
-			"runscope_schedule":    resourceRunscopeSchedule(),
-			"runscope_step":        resourceRunscopeStep(),
+			"runscope_bucket":       resourceRunscopeBucket(),
+			"runscope_test":         resourceRunscopeTest(),
+			"runscope_environment":  resourceRunscopeEnvironment(),
+			"runscope_schedule":     resourceRunscopeSchedule(),
+			"runscope_step_request": resourceRunscopeStepRequest(),
+			"runscope_step_subtest": resourceRunscopeStepSubtest(),
 		},
 
 		ConfigureContextFunc: providerConfigure,
@@ -62,8 +65,10 @@ func providerConfigure(_ context.Context, d *schema.ResourceData) (interface{}, 
 }
 
 func isNotFound(err error) bool {
-	if runscopeErr, ok := err.(runscope.Error); ok {
+	var runscopeErr runscope.Error
+	if errors.As(err, &runscopeErr) {
 		return runscopeErr.Status() == 404
 	}
+
 	return false
 }

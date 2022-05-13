@@ -66,14 +66,14 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 
 	req, err := func() (*http.Request, error) {
 		if body == nil {
-			return http.NewRequest(method, apiUrl, nil)
+			return http.NewRequestWithContext(ctx, method, apiUrl, nil)
 		}
 
 		reqBodyData, err := json.Marshal(body)
 		if err != nil {
 			return nil, err
 		}
-		return http.NewRequest(method, apiUrl, bytes.NewReader(reqBodyData))
+		return http.NewRequestWithContext(ctx, method, apiUrl, bytes.NewReader(reqBodyData))
 	}()
 
 	if err != nil {
@@ -86,35 +86,33 @@ func (c *Client) NewRequest(ctx context.Context, method, path string, body inter
 		req.Header.Set("Content-Type", "application/json")
 	}
 
-	req = req.WithContext(ctx)
-
 	return req, nil
 }
 
 func (c *Client) Do(r *http.Request, v interface{}) error {
 	resp, err := c.httpClient.Do(r)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to do: %w", err)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read body: %w", err)
 	}
 
 	if resp.StatusCode >= 400 {
-		err = &Error{
+		err = Error{
 			Response: resp,
 		}
-		json.Unmarshal(body, err)
-		return err
+		json.Unmarshal(body, &err)
+		return fmt.Errorf("unexpected response code: %w", err)
 	}
 
 	if v != nil {
 		if err := json.Unmarshal(body, v); err != nil {
-			return err
+			return fmt.Errorf("failed to unmarshl json: %w", err)
 		}
 	}
 
