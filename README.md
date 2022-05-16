@@ -24,4 +24,4 @@ and run `terraform init`
 
 ## Usage
 
-Read the [documentation on Terraform Registry site](https://registry.terraform.io/providers/sport24ru/runscope/latest/docs).
+Read the [documentation on Terraform Registry site](https://registry.terraform.io/providers/Storytel/runscope/latest/docs).
