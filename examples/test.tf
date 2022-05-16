@@ -1,55 +1,35 @@
-variable "access_token" {}
-variable "team_uuid" {}
+terraform {
+  required_providers {
+	  runscope = {
+		  source = "terraform.storytel.com/storytel/runscope"
+		  version = "0.1.0"
+	  }
+  }
+}
 
 provider "runscope" {
-  access_token = var.access_token
+	access_token = "6cc13a12-c975-4f8b-b574-46b15b076bd0"
 }
 
-resource "runscope_environment" "main" {
-  bucket_id = runscope_bucket.main.id
-  name      = "shared-environment"
-  regions   = ["us1", "eu1"]
+resource "runscope_bucket" "my_bucket" {
+  name      = "Storytel/terraform-provider-runscope test"
+  team_uuid = "ff1d7a6c-8b46-4a9c-9096-647aa7033990"
 }
 
-# Create a bucket
-resource "runscope_bucket" "main" {
-  name      = "terraform-ftw"
-  team_uuid = var.team_uuid
+resource "runscope_environment" "my_env" {
+  bucket_id = runscope_bucket.my_bucket.id
+  name = "My Env"
 }
 
-# Create a test in the bucket
-resource "runscope_test" "homepage_test" {
-  name        = "homepage"
-  description = "checks example.com homepage is up and running"
-  bucket_id   = runscope_bucket.main.id
+resource "runscope_test" "my_test" {
+  name        = "My Test"
+  description = "Used as a subtest to login the users"
+  bucket_id   = runscope_bucket.my_bucket.id
 }
 
-# Create a test step
-resource "runscope_step" "home_page_step" {
-  bucket_id = runscope_bucket.main.id
-  test_id   = runscope_test.homepage_test.id
-  step_type = "request"
-  url       = "http://example.com"
-  method    = "GET"
-  assertions = [
-    {
-      source     = "response_status"
-      comparison = "equal_number"
-      value      = "200"
-    }
-  ]
-}
-
-# Create a schedule to execute the test
-resource "runscope_schedule" "hourly" {
-  bucket_id      = runscope_bucket.main.id
-  test_id        = runscope_test.homepage_test.id
-  interval       = "1h"
-  note           = "Hourly schedule"
-  environment_id = runscope_test.homepage_test.default_environment_id
-}
-
-
-output "bucket_url" {
-  value = "https://runscope.com/radar/${runscope_bucket.main.id}"
+resource "runscope_schedule" "my_sched" {
+  bucket_id = runscope_bucket.my_bucket.id
+  test_id = runscope_test.my_test.id
+  environment_id = runscope_environment.my_env.id
+  interval = "1d"
 }
