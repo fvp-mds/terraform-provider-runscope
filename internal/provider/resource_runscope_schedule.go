@@ -2,10 +2,11 @@ package provider
 
 import (
 	"context"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -40,10 +41,6 @@ func resourceRunscopeSchedule() *schema.Resource {
 			"note": {
 				Type:     schema.TypeString,
 				Optional: true,
-			},
-			"exported_at": {
-				Type:     schema.TypeString,
-				Computed: true,
 			},
 		},
 	}

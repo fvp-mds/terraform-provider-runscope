@@ -3,8 +3,10 @@ package runscope
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
+	"net/http"
 	"time"
+
+	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 )
 
 type ScheduleBase struct {
@@ -53,7 +55,7 @@ func (c *ScheduleClient) Create(ctx context.Context, opts *ScheduleCreateOpts) (
 	body.Interval = opts.Interval
 	body.Note = opts.Note
 
-	req, err := c.client.NewRequest(ctx, "POST", opts.URL(), &body)
+	req, err := c.client.NewRequest(ctx, http.MethodPost, opts.URL(), &body)
 	if err != nil {
 		return nil, err
 	}
