@@ -1,5 +1,7 @@
 # Terraform Runscope Provider
 
+> **_For internal use only, no support provided_**
+
 The Runscope provider is used to interact with the resources
 supported by [Runscope](https://runscope.com/).
 
@@ -12,7 +14,7 @@ terraform {
   required_providers {
     runscope = {
       source = "Storytel/runscope"
-      version = "~> 0.1.0"
+      version = "~> 0.12.0"
     }
   }
 }
