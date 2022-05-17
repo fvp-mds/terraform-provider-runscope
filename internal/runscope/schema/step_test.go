@@ -6,7 +6,7 @@ import (
 )
 
 func TestStep_CreateResponse(t *testing.T) {
-	var resp StepCreateResponse
+	var resp StepCreateRequestResponse
 
 	err := json.Unmarshal([]byte(runscopeStepCreateResponse), &resp)
 	if err != nil {

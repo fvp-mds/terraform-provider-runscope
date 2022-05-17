@@ -84,11 +84,6 @@ func resourceRunscopeStepRequest() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
-			"step_type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
 			"method": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -225,16 +220,16 @@ func resourceRunscopeStepRequest() *schema.Resource {
 func resourceStepRequestCreate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*providerConfig).client
 
-	opts := &runscope.StepCreateOpts{}
+	opts := &runscope.StepCreateRequestOpts{}
 	expandStepUriOpts(d, &opts.StepUriOpts)
-	expandStepBaseOpts(d, &opts.StepBaseOpts)
+	expandStepBaseOpts(d, &opts.StepRequestOpts)
 
-	step, err := client.Step.Create(ctx, opts)
+	step, err := client.Step.CreateRequest(ctx, opts)
 	if err != nil {
 		return diag.Errorf("Couldn't create step: %s", err)
 	}
 
-	d.SetId(step.Id)
+	d.SetId(step.ID)
 
 	return resourceStepRequestRead(ctx, d, meta)
 }
@@ -242,12 +237,12 @@ func resourceStepRequestCreate(ctx context.Context, d *schema.ResourceData, meta
 func resourceStepRequestRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*providerConfig).client
 
-	opts := &runscope.StepGetOpts{}
+	opts := &runscope.StepGetRequestOpts{}
 	opts.Id = d.Id()
 	opts.TestId = d.Get("test_id").(string)
 	opts.BucketId = d.Get("bucket_id").(string)
 
-	step, err := client.Step.Get(ctx, opts)
+	step, err := client.Step.GetRequest(ctx, opts)
 	if err != nil {
 		if isNotFound(err) {
 			d.SetId("")
@@ -257,7 +252,6 @@ func resourceStepRequestRead(ctx context.Context, d *schema.ResourceData, meta i
 		return diag.Errorf("Couldn't read step: %s", err)
 	}
 
-	d.Set("step_type", step.StepType)
 	d.Set("method", step.Method)
 	d.Set("url", step.StepURL)
 	d.Set("variable", flattenStepVariables(step.Variables))
@@ -279,11 +273,11 @@ func resourceStepRequestRead(ctx context.Context, d *schema.ResourceData, meta i
 func resourceStepRequestUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*providerConfig).client
 
-	opts := &runscope.StepUpdateOpts{}
-	expandStepGetOpts(d, &opts.StepGetOpts)
-	expandStepBaseOpts(d, &opts.StepBaseOpts)
+	opts := &runscope.StepUpdateRequestOpts{}
+	expandStepGetOpts(d, &opts.StepGetRequestOpts)
+	expandStepBaseOpts(d, &opts.StepRequestOpts)
 
-	_, err := client.Step.Update(ctx, opts)
+	_, err := client.Step.UpdateRequest(ctx, opts)
 	if err != nil {
 		return diag.Errorf("Couldn't create step: %s", err)
 	}
@@ -291,13 +285,12 @@ func resourceStepRequestUpdate(ctx context.Context, d *schema.ResourceData, meta
 	return resourceStepRequestRead(ctx, d, meta)
 }
 
-func expandStepGetOpts(d *schema.ResourceData, opts *runscope.StepGetOpts) {
+func expandStepGetOpts(d *schema.ResourceData, opts *runscope.StepGetRequestOpts) {
 	opts.Id = d.Id()
 	expandStepUriOpts(d, &opts.StepUriOpts)
 }
 
-func expandStepBaseOpts(d *schema.ResourceData, opts *runscope.StepBaseOpts) {
-	opts.StepType = d.Get("step_type").(string)
+func expandStepBaseOpts(d *schema.ResourceData, opts *runscope.StepRequestOpts) {
 	if v, ok := d.GetOk("method"); ok {
 		opts.Method = v.(string)
 	}

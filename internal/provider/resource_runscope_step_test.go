@@ -378,17 +378,17 @@ func testAccCheckStepExists(n string) resource.TestCheckFunc {
 
 		client := testAccProvider.Meta().(*providerConfig).client
 
-		opts := &runscope.StepGetOpts{}
+		opts := &runscope.StepGetRequestOpts{}
 		opts.Id = rs.Primary.ID
 		opts.TestId = rs.Primary.Attributes["test_id"]
 		opts.BucketId = rs.Primary.Attributes["bucket_id"]
 
-		step, err := client.Step.Get(ctx, opts)
+		step, err := client.Step.GetRequest(ctx, opts)
 		if err != nil {
 			return err
 		}
 
-		if step.Id != rs.Primary.ID {
+		if step.ID != rs.Primary.ID {
 			return fmt.Errorf("Record not found")
 		}
 

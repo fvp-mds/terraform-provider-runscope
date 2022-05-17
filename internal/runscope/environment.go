@@ -3,6 +3,8 @@ package runscope
 import (
 	"context"
 	"fmt"
+	"net/http"
+
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 )
 
@@ -150,7 +152,7 @@ func (c *EnvironmentClient) Create(ctx context.Context, opts *EnvironmentCreateO
 	body := &schema.EnvironmentCreateRequest{}
 	opts.EnvironmentBase.setRequest(&body.EnvironmentBase)
 
-	req, err := c.client.NewRequest(ctx, "POST", opts.BaseURL(), &body)
+	req, err := c.client.NewRequest(ctx, http.MethodPost, opts.BaseURL(), &body)
 	if err != nil {
 		return nil, err
 	}
@@ -175,7 +177,7 @@ func (opts *EnvironmentGetOpts) URL() string {
 
 func (c *EnvironmentClient) Get(ctx context.Context, opts *EnvironmentGetOpts) (*Environment, error) {
 	var resp schema.EnvironmentGetResponse
-	req, err := c.client.NewRequest(ctx, "GET", opts.URL(), nil)
+	req, err := c.client.NewRequest(ctx, http.MethodGet, opts.URL(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -197,7 +199,7 @@ func (c *EnvironmentClient) Update(ctx context.Context, opts *EnvironmentUpdateO
 	body := &schema.EnvironmentUpdateRequest{}
 	opts.EnvironmentBase.setRequest(&body.EnvironmentBase)
 
-	req, err := c.client.NewRequest(ctx, "PUT", opts.URL(), &body)
+	req, err := c.client.NewRequest(ctx, http.MethodPut, opts.URL(), &body)
 	if err != nil {
 		return nil, err
 	}
@@ -216,7 +218,7 @@ type EnvironmentDeleteOpts struct {
 }
 
 func (c *EnvironmentClient) Delete(ctx context.Context, opts *EnvironmentDeleteOpts) error {
-	req, err := c.client.NewRequest(ctx, "DELETE", opts.URL(), nil)
+	req, err := c.client.NewRequest(ctx, http.MethodDelete, opts.URL(), nil)
 	if err != nil {
 		return err
 	}

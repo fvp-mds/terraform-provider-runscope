@@ -107,7 +107,7 @@ func resourceStepSubtestCreate(ctx context.Context, d *schema.ResourceData, meta
 		return diag.Errorf("couldn't read step: %s", err)
 	}
 
-	d.SetId(step.Id)
+	d.SetId(step.ID)
 
 	return resourceStepSubtestRead(ctx, d, meta)
 }
@@ -115,7 +115,7 @@ func resourceStepSubtestCreate(ctx context.Context, d *schema.ResourceData, meta
 func resourceStepSubtestRead(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
 	client := meta.(*providerConfig).client
 
-	opts := &runscope.StepGetOpts{
+	opts := &runscope.StepGetRequestOpts{
 		StepUriOpts: runscope.StepUriOpts{
 			BucketId: d.Get("bucket_id").(string),
 			TestId:   d.Get("test_id").(string),
@@ -148,7 +148,7 @@ func resourceStepSubtestUpdate(ctx context.Context, d *schema.ResourceData, meta
 	client := meta.(*providerConfig).client
 
 	opts := &runscope.StepUpdateSubtestOpts{}
-	expandStepGetOpts(d, &opts.StepGetOpts)
+	expandStepGetOpts(d, &opts.StepGetRequestOpts)
 	expandStepSubtestOpts(d, &opts.StepSubtestOpts)
 
 	_, err := client.Step.UpdateSubtest(ctx, opts)

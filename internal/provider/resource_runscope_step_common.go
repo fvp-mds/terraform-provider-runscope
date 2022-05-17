@@ -40,7 +40,7 @@ func resourceStepDelete(ctx context.Context, d *schema.ResourceData, meta interf
 	client := meta.(*providerConfig).client
 
 	opts := &runscope.StepDeleteOpts{}
-	expandStepGetOpts(d, &opts.StepGetOpts)
+	expandStepGetOpts(d, &opts.StepGetRequestOpts)
 
 	if err := client.Step.Delete(ctx, opts); err != nil {
 		return diag.Errorf("Couldn't read step: %s", err)

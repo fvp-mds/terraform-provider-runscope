@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -157,11 +158,12 @@ func resourceEnvironmentCreate(ctx context.Context, d *schema.ResourceData, meta
 	opts := runscope.EnvironmentCreateOpts{}
 	expandEnvironmentUriOpts(d, &opts.EnvironmentUriOpts)
 	expandEnvironmentBase(d, &opts.EnvironmentBase)
-	if env, err := client.Environment.Create(ctx, &opts); err != nil {
+	env, err := client.Environment.Create(ctx, &opts)
+	if err != nil {
 		return diag.Errorf("Couldn't create environment: %s", err)
-	} else {
-		d.SetId(env.Id)
 	}
+
+	d.SetId(env.Id)
 
 	return resourceEnvironmentRead(ctx, d, meta)
 }
@@ -285,12 +287,13 @@ func expandEnvironmentBase(d *schema.ResourceData, opts *runscope.EnvironmentBas
 	if v, ok := d.GetOk("preserve_cookies"); ok {
 		opts.PreserveCookies = v.(bool)
 	}
+	opts.InitialVariables = map[string]string{}
 	if v, ok := d.GetOk("initial_variables"); ok {
-		opts.InitialVariables = map[string]string{}
 		for key, value := range v.(map[string]interface{}) {
 			opts.InitialVariables[key] = value.(string)
 		}
 	}
+	opts.Integrations = []string{}
 	if v, ok := d.GetOk("integrations"); ok {
 		for _, id := range v.(*schema.Set).List() {
 			opts.Integrations = append(opts.Integrations, id.(string))
@@ -316,6 +319,7 @@ func expandEnvironmentBase(d *schema.ResourceData, opts *runscope.EnvironmentBas
 	if v, ok := d.GetOk("stop_on_failure"); ok {
 		opts.StopOnFailure = v.(bool)
 	}
+	opts.Webhooks = []string{}
 	if v, ok := d.GetOk("webhooks"); ok {
 		for _, w := range v.(*schema.Set).List() {
 			opts.Webhooks = append(opts.Webhooks, w.(string))

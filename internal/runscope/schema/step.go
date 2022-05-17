@@ -1,6 +1,7 @@
 package schema
 
-type StepBase struct {
+type StepRequest struct {
+	ID            string              `json:"id"`
 	StepType      string              `json:"step_type"`
 	Method        string              `json:"method"`
 	URL           string              `json:"url"`
@@ -25,11 +26,6 @@ type StepSubtest struct {
 	Assertions      []StepAssertion `json:"assertions"`
 }
 
-type Step struct {
-	StepBase
-	Id string `json:"id"`
-}
-
 type StepVariable struct {
 	Name     string `json:"name"`
 	Property string `json:"property"`
@@ -49,40 +45,41 @@ type StepAuth struct {
 	AuthType string `json:"auth_type,omitempty"`
 }
 
-type StepGetResponse struct {
-	Step `json:"data"`
+type StepCreateRequestRequest struct {
+	StepRequest
+	StepType string `json:"step_type"`
+}
+
+type StepCreateRequestResponse struct {
+	Step []StepRequest `json:"data"`
+}
+
+type StepGetRequestResponse struct {
+	Step StepRequest `json:"data"`
 }
 
 type StepGetSubstepResponse struct {
 	Step StepSubtest `json:"data"`
 }
-
-type StepCreateRequest struct {
-	StepBase
+type StepUpdateRequestRequest struct {
+	StepRequest
+	StepType string `json:"step_type"`
+}
+type StepUpdateRequstResponse struct {
+	Step StepRequest `json:"data"`
 }
 
 type StepCreateSubtestRequest struct {
 	StepSubtest
 	StepType string `json:"step_type"`
 }
-
-type StepCreateResponse struct {
-	Step []Step `json:"data"`
+type StepCreateSubtestResponse struct {
+	Step []StepSubtest `json:"data"`
 }
-
-type StepUpdateRequest struct {
-	Step
-}
-
 type StepUpdateSubtestRequest struct {
 	StepSubtest
 	StepType string `json:"step_type"`
 }
-
-type StepUpdateResponse struct {
-	Step Step `json:"data"`
-}
-
 type StepUpdateSubtestResponse struct {
 	Step StepSubtest `json:"data"`
 }
