@@ -34,6 +34,7 @@ func Provider() *schema.Provider {
 			"runscope_bucket":        dataSourceRunscopeBucket(),
 			"runscope_buckets":       dataSourceRunscopeBuckets(),
 			"runscope_remote_agents": dataSourceRunscopeRemoteAgents(),
+			"runscope_team":          dataSourceRunscopeTeam(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

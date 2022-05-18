@@ -17,7 +17,7 @@ terraform {
   required_providers {
     runscope = {
       source  = "Storytel/runscope"
-      version = "~> 0.13.0"
+      version = "~> 0.12.0"
     }
   }
 }
