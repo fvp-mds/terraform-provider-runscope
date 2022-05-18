@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 )
@@ -17,8 +16,7 @@ type ScheduleBase struct {
 
 type Schedule struct {
 	ScheduleBase
-	Id         string
-	ExportedAt time.Time
+	Id string
 }
 
 type ScheduleClient struct {
@@ -31,7 +29,6 @@ func ScheduleFromSchema(s *schema.Schedule) *Schedule {
 	schedule.EnvironmentId = s.EnvironmentId
 	schedule.Interval = s.Interval
 	schedule.Note = s.Note
-	schedule.ExportedAt = time.Unix(s.ExportedAt, 0)
 	return schedule
 }
 

@@ -46,6 +46,7 @@ func resourceRunscopeBucket() *schema.Resource {
 				Computed: true,
 			},
 		},
+		Description: "A bucket for Runscope tests.",
 	}
 }
 

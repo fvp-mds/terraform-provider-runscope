@@ -5,6 +5,8 @@ import (
 	"github.com/terraform-providers/terraform-provider-runscope/internal/provider"
 )
 
+//go:generate go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
 		ProviderFunc: provider.Provider,

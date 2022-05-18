@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope"
@@ -222,7 +223,7 @@ func resourceStepRequestCreate(ctx context.Context, d *schema.ResourceData, meta
 
 	opts := &runscope.StepCreateRequestOpts{}
 	expandStepUriOpts(d, &opts.StepUriOpts)
-	expandStepBaseOpts(d, &opts.StepRequestOpts)
+	expandStepRequestOpts(d, &opts.StepRequestOpts)
 
 	step, err := client.Step.CreateRequest(ctx, opts)
 	if err != nil {
@@ -275,8 +276,9 @@ func resourceStepRequestUpdate(ctx context.Context, d *schema.ResourceData, meta
 
 	opts := &runscope.StepUpdateRequestOpts{}
 	expandStepGetOpts(d, &opts.StepGetRequestOpts)
-	expandStepBaseOpts(d, &opts.StepRequestOpts)
+	expandStepRequestOpts(d, &opts.StepRequestOpts)
 
+	tflog.Info(ctx, "CALLING UPDATE REQUEST")
 	_, err := client.Step.UpdateRequest(ctx, opts)
 	if err != nil {
 		return diag.Errorf("Couldn't create step: %s", err)
@@ -290,7 +292,7 @@ func expandStepGetOpts(d *schema.ResourceData, opts *runscope.StepGetRequestOpts
 	expandStepUriOpts(d, &opts.StepUriOpts)
 }
 
-func expandStepBaseOpts(d *schema.ResourceData, opts *runscope.StepRequestOpts) {
+func expandStepRequestOpts(d *schema.ResourceData, opts *runscope.StepRequestOpts) {
 	if v, ok := d.GetOk("method"); ok {
 		opts.Method = v.(string)
 	}

@@ -93,7 +93,6 @@ func resourceScheduleRead(ctx context.Context, d *schema.ResourceData, meta inte
 	d.Set("environment_id", schedule.EnvironmentId)
 	d.Set("interval", strings.ReplaceAll(schedule.Interval, ".0", ""))
 	d.Set("note", schedule.Note)
-	d.Set("exported_at", flattenTime(schedule.ExportedAt))
 	return nil
 }
 

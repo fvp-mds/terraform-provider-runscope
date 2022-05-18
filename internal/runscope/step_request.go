@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/terraform-providers/terraform-provider-runscope/internal/runscope/schema"
 )
 
@@ -196,10 +197,16 @@ type StepUpdateRequestOpts struct {
 }
 
 func (c *StepClient) UpdateRequest(ctx context.Context, opts *StepUpdateRequestOpts) (*StepRequest, error) {
-	body := &schema.StepUpdateRequestRequest{}
-	opts.StepRequestOpts.setRequest(&body.StepRequest)
+	body := &schema.StepUpdateRequestRequest{
+		StepType: "request",
+	}
+	opts.setRequest(&body.StepRequest)
 	body.ID = opts.Id
 
+	tflog.Info(ctx, "calling with PUT", map[string]interface{}{
+		"url":  opts.URL(),
+		"body": body,
+	})
 	req, err := c.client.NewRequest(ctx, http.MethodPut, opts.URL(), &body)
 	if err != nil {
 		return nil, err

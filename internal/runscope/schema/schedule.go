@@ -8,8 +8,7 @@ type ScheduleBase struct {
 
 type Schedule struct {
 	ScheduleBase
-	Id         string `json:"id"`
-	ExportedAt int64  `json:"exported_at"`
+	Id string `json:"id"`
 }
 
 type ScheduleGetResponse struct {
