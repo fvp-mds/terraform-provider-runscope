@@ -24,6 +24,7 @@ type Client struct {
 	Schedule    ScheduleClient
 	Step        StepClient
 	RemoteAgent RemoteAgentClient
+	Account     AccountClient
 }
 
 func NewClient(options ...ClientOption) *Client {
@@ -43,6 +44,7 @@ func NewClient(options ...ClientOption) *Client {
 	client.Schedule = ScheduleClient{client: client}
 	client.Step = StepClient{client: client}
 	client.RemoteAgent = RemoteAgentClient{client: client}
+	client.Account = AccountClient{client: client}
 
 	return client
 }

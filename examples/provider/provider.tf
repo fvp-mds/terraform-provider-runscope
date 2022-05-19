@@ -1,19 +1,10 @@
-terraform {
-  required_providers {
-    runscope = {
-      source  = "Storytel/runscope"
-      version = "~> 0.12.0"
-    }
-  }
-}
-
-provider "runscope" {
-  access_token = var.access_token
+data "runscope_team" "my_team" {
+  name = var.team_name
 }
 
 resource "runscope_bucket" "my_bucket" {
   name      = "My Bucket"
-  team_uuid = var.team_uuid
+  team_uuid = data.runscope_team.my_team.id
 }
 
 resource "runscope_test" "my_test" {
