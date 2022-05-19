@@ -16,6 +16,6 @@ variable "access_token" {
   sensitive = true
 }
 
-variable "team_uuid" {
+variable "team_name" {
   type = string
 }

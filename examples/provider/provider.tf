@@ -1,6 +1,10 @@
+data "runscope_team" "my_team" {
+  name = var.team_name
+}
+
 resource "runscope_bucket" "my_bucket" {
   name      = "My Bucket"
-  team_uuid = var.team_uuid
+  team_uuid = data.runscope_team.my_team.id
 }
 
 resource "runscope_test" "my_test" {
