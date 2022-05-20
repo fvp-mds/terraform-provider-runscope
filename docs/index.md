@@ -13,6 +13,19 @@ description: |-
 ## Example Usage
 
 ```terraform
+terraform {
+  required_providers {
+    runscope = {
+      source  = "Storytel/runscope"
+      version = ">= 0.14.0"
+    }
+  }
+}
+
+provider "runscope" {
+  access_token = var.access_token
+}
+
 data "runscope_team" "my_team" {
   name = var.team_name
 }
