@@ -33,7 +33,7 @@ func BucketFromSchema(s *schema.Bucket) *Bucket {
 		Name: s.Name,
 		Team: Team{
 			Name: s.Team.Name,
-			UUID: s.Team.UUID,
+			UUID: s.Team.ID,
 		},
 		AuthToken:  s.AuthToken,
 		Default:    s.Default,
