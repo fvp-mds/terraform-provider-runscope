@@ -3,6 +3,7 @@ package schema
 type EnvironmentBase struct {
 	Name                string                   `json:"name"`
 	Script              string                   `json:"script"`
+	Headers             map[string][]string      `json:"headers"`
 	PreserveCookies     bool                     `json:"preserve_cookies"`
 	InitialVariables    map[string]string        `json:"initial_variables"`
 	Integrations        []EnvironmentIntegration `json:"integrations"`

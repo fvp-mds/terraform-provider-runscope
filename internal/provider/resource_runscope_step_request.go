@@ -306,7 +306,7 @@ func expandStepRequestOpts(d *schema.ResourceData, opts *runscope.StepRequestOpt
 		opts.Assertions = expandStepAssertions(v.([]interface{}))
 	}
 	if v, ok := d.GetOk("header"); ok {
-		opts.Headers = expandStepHeaders(v.(*schema.Set).List())
+		opts.Headers = expandHeaders(v.(*schema.Set).List())
 	}
 	if v, ok := d.GetOk("auth"); ok {
 		opts.Auth = expandStepAuth(v.(*schema.Set).List())

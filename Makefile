@@ -3,7 +3,7 @@ HOSTNAME=registry.terraform.io
 NAMESPACE=storytel
 NAME=runscope
 BINARY=terraform-provider-${NAME}
-VERSION=0.12.0
+VERSION=0.15.0
 OS_ARCH=darwin_arm64
 
 default: install

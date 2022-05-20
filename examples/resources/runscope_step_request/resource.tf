@@ -13,7 +13,7 @@ resource "runscope_step_request" "my_request" {
 
   header {
     header = "X-My-Custom-Header"
-    value = "charge"
+    value  = "charge"
   }
 
   assertion {
