@@ -100,7 +100,7 @@ func expandStepAssertions(assertions []interface{}) []runscope.StepAssertion {
 	return result
 }
 
-func expandStepHeaders(headers []interface{}) map[string][]string {
+func expandHeaders(headers []interface{}) map[string][]string {
 	result := map[string][]string{}
 	for _, h := range headers {
 		header := h.(map[string]interface{})

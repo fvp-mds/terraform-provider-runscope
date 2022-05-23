@@ -35,6 +35,22 @@ func resourceRunscopeEnvironment() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"header": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"header": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"value": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+			},
 			"preserve_cookies": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -283,6 +299,9 @@ func expandEnvironmentBase(d *schema.ResourceData, opts *runscope.EnvironmentBas
 	opts.VerifySSL = d.Get("verify_ssl").(bool)
 	if v, ok := d.GetOk("script"); ok {
 		opts.Script = v.(string)
+	}
+	if v, ok := d.GetOk("header"); ok {
+		opts.Headers = expandHeaders(v.(*schema.Set).List())
 	}
 	if v, ok := d.GetOk("preserve_cookies"); ok {
 		opts.PreserveCookies = v.(bool)

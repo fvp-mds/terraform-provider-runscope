@@ -11,6 +11,7 @@ import (
 type EnvironmentBase struct {
 	Name                string
 	Script              string
+	Headers             map[string][]string
 	PreserveCookies     bool
 	InitialVariables    map[string]string
 	Integrations        []string
@@ -28,6 +29,7 @@ type EnvironmentBase struct {
 func (eb *EnvironmentBase) setRequest(seb *schema.EnvironmentBase) {
 	seb.Name = eb.Name
 	seb.Script = eb.Script
+	seb.Headers = map[string][]string{}
 	seb.PreserveCookies = eb.PreserveCookies
 	seb.InitialVariables = eb.InitialVariables
 	seb.Regions = eb.Regions
@@ -56,6 +58,10 @@ func (eb *EnvironmentBase) setRequest(seb *schema.EnvironmentBase) {
 			Name:  recipient.Name,
 			Email: recipient.Email,
 		}
+	}
+	for header, values := range eb.Headers {
+		seb.Headers[header] = make([]string, len(values))
+		copy(seb.Headers[header], values)
 	}
 	seb.ParentEnvironmentId = eb.ParentEnvironmentId
 	seb.ClientCertificate = eb.ClientCertificate
@@ -97,6 +103,7 @@ func EnvironmentFromSchema(s *schema.Environment) *Environment {
 	env.Id = s.Id
 	env.Name = s.Name
 	env.Script = s.Script
+	env.Headers = map[string][]string{}
 	env.PreserveCookies = s.PreserveCookies
 	env.InitialVariables = s.InitialVariables
 	env.Regions = s.Regions
@@ -125,6 +132,10 @@ func EnvironmentFromSchema(s *schema.Environment) *Environment {
 			Name:  r.Name,
 			Email: r.Email,
 		})
+	}
+	for header, values := range s.Headers {
+		env.Headers[header] = make([]string, len(values))
+		copy(env.Headers[header], values)
 	}
 	env.ParentEnvironmentId = s.ParentEnvironmentId
 	env.ClientCertificate = s.ClientCertificate
