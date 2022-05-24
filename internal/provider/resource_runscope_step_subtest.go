@@ -41,7 +41,13 @@ func resourceRunscopeStepSubtest() *schema.Resource {
 			},
 			"source_environment_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Description: "The ID of the environment which the subtest should run under.",
+			},
+			"use_parent_environment": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
 				Description: "The ID of the environment which the subtest should run under.",
 			},
 			"variable": {
@@ -152,6 +158,7 @@ func resourceStepSubtestRead(ctx context.Context, d *schema.ResourceData, meta i
 	d.Set("source_bucket_id", step.BucketKey)
 	d.Set("source_test_id", step.TestUUID)
 	d.Set("source_environment_id", step.EnvironmentUUID)
+	d.Set("use_parent_environment", step.UseParentEnvironment)
 	d.Set("variable", flattenStepVariables(step.Variables))
 	d.Set("assertion", flattenStepAssertions(step.Assertions))
 
@@ -182,6 +189,9 @@ func expandStepSubtestOpts(d *schema.ResourceData, opts *runscope.StepSubtestOpt
 	}
 	if v, ok := d.GetOk("source_environment_id"); ok {
 		opts.EnvironmentUUID = v.(string)
+	}
+	if v, ok := d.GetOk("use_parent_environment"); ok {
+		opts.UseParentEnvironment = v.(bool)
 	}
 	if v, ok := d.GetOk("variable"); ok {
 		opts.Variables = expandStepVariables(v.(*schema.Set).List())

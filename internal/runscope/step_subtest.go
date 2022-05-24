@@ -18,18 +18,20 @@ func StepSubtestFromSchema(s *schema.StepSubtest) *StepSubtest {
 }
 
 type StepSubtest struct {
-	ID              string
-	BucketKey       string
-	TestUUID        string
-	EnvironmentUUID string
-	Variables       []StepVariable
-	Assertions      []StepAssertion
+	ID                   string
+	BucketKey            string
+	TestUUID             string
+	EnvironmentUUID      string
+	UseParentEnvironment bool
+	Variables            []StepVariable
+	Assertions           []StepAssertion
 }
 
 func (ss *StepSubtest) setFromSchema(s *schema.StepSubtest) {
 	ss.BucketKey = s.BucketKey
 	ss.EnvironmentUUID = s.EnvironmentUUID
 	ss.TestUUID = s.TestUUID
+	ss.UseParentEnvironment = s.UseParentEnvironment
 
 	ss.Variables = make([]StepVariable, len(s.Variables))
 	ss.Assertions = make([]StepAssertion, len(s.Assertions))
@@ -51,17 +53,19 @@ func (ss *StepSubtest) setFromSchema(s *schema.StepSubtest) {
 }
 
 type StepSubtestOpts struct {
-	TestUUID        string
-	EnvironmentUUID string
-	BucketKey       string
-	Assertions      []StepAssertion
-	Variables       []StepVariable
+	TestUUID             string
+	EnvironmentUUID      string
+	BucketKey            string
+	UseParentEnvironment bool
+	Assertions           []StepAssertion
+	Variables            []StepVariable
 }
 
 func (sso *StepSubtestOpts) setRequest(ss *schema.StepSubtest) {
 	ss.BucketKey = sso.BucketKey
 	ss.TestUUID = sso.TestUUID
 	ss.EnvironmentUUID = sso.EnvironmentUUID
+	ss.UseParentEnvironment = sso.UseParentEnvironment
 
 	ss.Variables = make([]schema.StepVariable, len(sso.Variables))
 	ss.Assertions = make([]schema.StepAssertion, len(sso.Assertions))

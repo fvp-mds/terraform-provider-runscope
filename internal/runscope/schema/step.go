@@ -18,12 +18,13 @@ type StepRequest struct {
 }
 
 type StepSubtest struct {
-	ID              string          `json:"id"`
-	TestUUID        string          `json:"test_uuid"`
-	EnvironmentUUID string          `json:"environment_uuid"`
-	BucketKey       string          `json:"bucket_key"`
-	Variables       []StepVariable  `json:"variables"`
-	Assertions      []StepAssertion `json:"assertions"`
+	ID                   string          `json:"id"`
+	TestUUID             string          `json:"test_uuid"`
+	EnvironmentUUID      string          `json:"environment_uuid"`
+	BucketKey            string          `json:"bucket_key"`
+	UseParentEnvironment bool            `json:"use_parent_environment"`
+	Variables            []StepVariable  `json:"variables"`
+	Assertions           []StepAssertion `json:"assertions"`
 }
 
 type StepVariable struct {
