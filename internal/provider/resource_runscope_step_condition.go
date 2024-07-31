@@ -44,6 +44,21 @@ func resourceRunscopeCondition() *schema.Resource {
 				Optional:    true,
 				Description: "The ID of the environment which the Condition should run under.",
 			},
+			"left_value": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The left hand value of the assertion.",
+			},
+			"comparison": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "An assertion comparison to determine whether or not to execute the embedded steps.",
+			},
+			"right_value": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The right hand value of the assertion. If one is required",
+			},
 			"use_parent_environment": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -75,37 +90,55 @@ func resourceRunscopeCondition() *schema.Resource {
 				Optional:    true,
 				Description: "Variables to extract from the Condition.",
 			},
-			"assertion": {
-				Type: schema.TypeList,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"source": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: validation.StringInSlice(stepSources, false),
-							Description:  "The source of the property to assert.",
+			// "steps": {
+			// 	Type: schema.TypeSet,
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"method": {
+			// 				Type:        schema.TypeString,
+			// 				Required:    true,
+			// 				Description: "The method to use, i.e. GET, POST",
+			// 			},
+			// 			"step_type": {
+			// 				Type:        schema.TypeString,
+			// 				Optional:    true,
+			// 				Description: "The property to extract.",
+			// 			},
+			// 			"url": {
+			// 				Type:         schema.TypeString,
+			// 				Required:     true,
+			// 				ValidateFunc: validation.StringInSlice(stepSources, false),
+			// 				Description:  "The source of the property, e.g. `response_json`.",
+			// 			},
+						"assertion": {
+							Type: schema.TypeList,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"source": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validation.StringInSlice(stepSources, false),
+										Description:  "The source of the property to assert.",
+									},
+									"comparison": {
+										Type:         schema.TypeString,
+										Required:     true,
+										ValidateFunc: validation.StringInSlice(stepComparisons, false),
+										Description:  "The comparison type, eg `equal` or `has_key`.",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The value to assert the source.property has.",
+									},
+								},
+							},
 						},
-						"property": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "The property to assert on.",
-						},
-						"comparison": {
-							Type:         schema.TypeString,
-							Required:     true,
-							ValidateFunc: validation.StringInSlice(stepComparisons, false),
-							Description:  "The comparison type, eg `equal` or `has_key`.",
-						},
-						"value": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "The value to assert the source.property has.",
-						},
-					},
-				},
-				Optional:    true,
-				Description: "Assertions to ensure the Condition ran successfully.",
-			},
+			// 		},
+			// 	},
+			// 	Optional:    true,
+			// 	Description: "An array of test steps to execute if the comparison evaluates successfully.",
+			// },
 		},
 	}
 }
